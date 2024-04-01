@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThreeD Card Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    body {
+      font-family: system-ui, sans-serif;
+      perspective: 1500px;
+      background: linear-gradient(white, #efefef);
+    }
+
+    .card {
+      font-weight: bold;
+      padding: 1em;
+      text-align: right;
+      color: #181a1a;
+
+      width: 300px;
+      height: 400px;
+      box-shadow: 0 1px 5px #00000099;
+
+      border-radius: 10px;
+      background-image: url(https://i.pinimg.com/originals/cb/73/b5/cb73b58b68a22c553b69ea291d4d21e9.jpg);
+      background-size: cover;
+      
+      position: relative;
+      margin: 0 20px;
+      transition-duration: 300ms;
+      transition-property: transform, box-shadow;
+      transition-timing-function: ease-out;
+      transform: rotate3d(0);
+    }
+
+    .card:hover {
+      transition-duration: 150ms;
+      box-shadow: 0 0px 2px 9px #00000044;
+    }
+
+    .card .glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+
+      background-image: radial-gradient(circle at 50% -20%, #ffffff22, #0000000f);
+    }
+    .card1 {
+      background-color: black;
+  background-position: 50% 50%;
+
+  background-repeat: no-repeat;
+  background-image: url(https://i.pinimg.com/originals/cb/73/b5/cb73b58b68a22c553b69ea291d4d21e9.jpg);
+}
+
+.card2 {
+  background-color: black;
+  background-position: 50% 50%;
+;
+  background-repeat: no-repeat;
+  background-image: url(https://c0.wallpaperflare.com/preview/812/855/588/india-ahmedabad-river-front-road.jpg);
+}
+
+.card3 {
+  /* Add background image URL for the third card */
+  background-color: black;
+  background-position: 50% 50%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url(https://i.ytimg.com/vi/n9rOUTdXSSw/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCPF6PsqxIqFLj8jq54Kefy3WAanQ);
+}
+/* .card3:hover{
+  background-position: 0px 0px 5px;
+  transform: scale(1);
+} */
+  </style>
+</head>
+
+<body>
+  <!--
+  Trying to mimic this effect:
+  https://auth0.com/resources/ebooks/jwt-handbook
+-->
+<div class="card card1">
+  3d stuff
+  <div class="glow"></div>
+  <br>
+</div>
+
+<div class="card card2" style="color: white;">
+  Use Pc For Best effects
+  <div class="glow"></div>
+  <br>
+</div>
+
+<div class="card card3">
+  3d stuff
+  <div class="glow"></div>
+  <br>
+</div>
+
+
+  <script>
+    const $cards = document.querySelectorAll('.card');
+
+    $cards.forEach(card => {
+      let bounds;
+
+      function rotateToMouse(e) {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const leftX = mouseX - bounds.x;
+        const topY = mouseY - bounds.y;
+        const center = {
+          x: leftX - bounds.width / 2,
+          y: topY - bounds.height / 2
+        }
+        const distance = Math.sqrt(center.x ** 2 + center.y ** 2);
+
+        card.style.transform = `
+          scale3d(1.07, 1.07, 1.07)
+          rotate3d(
+            ${center.y / 100},
+            ${-center.x / 100},
+            0,
+            ${Math.log(distance) * 2}deg
+          )
+        `;
+
+        card.querySelector('.glow').style.backgroundImage = `
+          radial-gradient(
+            circle at
+            ${center.x * 2 + bounds.width / 2}px
+            ${center.y * 2 + bounds.height / 2}px,
+            #ffffff55,
+            #0000000f
+          )
+        `;
+      }
+
+      card.addEventListener('mouseenter', () => {
+        bounds = card.getBoundingClientRect();
+        document.addEventListener('mousemove', rotateToMouse);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        document.removeEventListener('mousemove', rotateToMouse);
+        card.style.transform = '';
+        card.style.background = '';
+      });
+    });
+  </script>
+</body>
+
+</html>
